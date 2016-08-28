@@ -1,18 +1,16 @@
 #!/usr/bin/env node
-var program = require('commander');
-var BuildTools_1 = require('./BuildTools');
+"use strict";
+const program = require('commander');
+const BuildTools_1 = require('./BuildTools');
 program.version('0.0.1');
-program.command('build <dir>')
+let a = 1;
+program.command('build <module_name>')
     .option("-w, --watchFile")
-    .action(function (dir, options) {
-    console.log('build ' + dir);
-    console.log(options.watchFile);
-    var buildTools = new BuildTools_1.BuildTools(dir);
-    buildTools.build(function (err) {
-        if (!err) {
-            console.log('build success!');
-        }
-    });
+    .action(function (moduleName, options) {
+    console.log('build ' + moduleName);
+    var buildTools = new BuildTools_1.BuildTools(moduleName);
+    buildTools.watchFilesAndBuild();
+    buildTools.build((err) => { });
 });
 program.on('--help', function () {
     console.log('  Examples:');

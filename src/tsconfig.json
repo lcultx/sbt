@@ -1,6 +1,6 @@
 {
    "compilerOptions": {
-      "target": "es5",
+      "target": "es6",
       "module": "commonjs",
       "allowJs": false,
       "noImplicitAny": false,
@@ -11,7 +11,7 @@
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
       "sourceMap": true,
-      "noImplicitUseStrict": true,
+      "noImplicitUseStrict": false,
       "jsx": "react",
       "declaration":false,
       "outDir": "../build",

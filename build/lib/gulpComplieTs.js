@@ -1,5 +1,6 @@
-var gulp = require('gulp');
-var ts = require('gulp-typescript');
+"use strict";
+const gulp = require('gulp');
+const ts = require('gulp-typescript');
 gulp.src('src/**/*.ts')
     .pipe(ts({
     noImplicitAny: true,
