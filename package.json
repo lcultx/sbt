@@ -25,6 +25,7 @@
     "commander": "^2.9.0",
     "gulp": "^3.9.1",
     "gulp-callback": "0.0.3",
+    "gulp-sourcemaps": "^1.6.0",
     "gulp-typescript": "^2.13.6",
     "nedb": "^1.8.0",
     "typescript": "^1.8.10"

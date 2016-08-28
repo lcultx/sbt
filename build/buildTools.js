@@ -2,6 +2,7 @@
 const gulp = require('gulp');
 const ts = require('gulp-typescript');
 const path = require('path');
+var sourcemaps = require('gulp-sourcemaps');
 const BuildToolsFactory_1 = require('./BuildToolsFactory');
 var gcallback = require('gulp-callback');
 const BaseTools_1 = require('./BaseTools');
@@ -75,7 +76,9 @@ class BuildTools extends BaseTools_1.BaseTools {
             }
             this.buildDeps();
             gulp.src(this.getModulePath(this.getModuleName()) + '/**/*.ts')
+                .pipe(sourcemaps.init())
                 .pipe(ts(tsProject))
+                .pipe(sourcemaps.write('.', { includeContent: true, sourceRoot: '..' }))
                 .pipe(gulp.dest(this.getBuildDest()))
                 .on('end', () => {
                 this._isCompling = false;

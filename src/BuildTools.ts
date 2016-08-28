@@ -3,6 +3,7 @@ import * as gulp from 'gulp';
 import * as ts from 'gulp-typescript';
 import * as path from 'path';
 import * as fs from 'fs';
+var sourcemaps = require('gulp-sourcemaps');
 import {BuildToolsFactory} from './BuildToolsFactory';
 var gcallback = require('gulp-callback');
 
@@ -115,9 +116,12 @@ export class BuildTools extends BaseTools {
          }
 
          this.buildDeps();
+  
          gulp.src(this.getModulePath(this.getModuleName()) + '/**/*.ts')
          //tsProject.src()
+             .pipe(sourcemaps.init())
             .pipe(ts(tsProject) as any)
+            .pipe(sourcemaps.write('.',{ includeContent: true, sourceRoot: '..' }))
             .pipe(gulp.dest(this.getBuildDest()))
             .on('end', () => {
                this._isCompling = false;
