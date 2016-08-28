@@ -45,4 +45,12 @@ export class SbtModule{
     public isDirty(){
        return this.getComplieTime() < this.getModifyTime()
     }
+
+    public build(){
+
+    }
+
+    public buildDeps(){
+      
+    }
 }
