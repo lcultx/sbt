@@ -11,6 +11,7 @@ const SbtModule_1 = require('./SbtModule');
 class BuildTools extends BaseTools_1.BaseTools {
     constructor(moduleName, configFiles, tsComplieOptions, isDepModule) {
         super(configFiles);
+        this._needBuildFiles = [];
         this._moduleName = moduleName;
         this._tsComplieOptions = tsComplieOptions;
         this._isCompling = false;
@@ -46,6 +47,7 @@ class BuildTools extends BaseTools_1.BaseTools {
         })
             .on('change', (filepath) => {
             this.sbtModule.updateModifyTime();
+            this._needBuildFiles.push(filepath);
             build(filepath + ' changed!', true);
         })
             .on('unlink', (filepath) => {
@@ -53,6 +55,14 @@ class BuildTools extends BaseTools_1.BaseTools {
             build(filepath + ' unlink!', true);
         })
             .on('error', function (error) { console.error('Error happened', error); });
+    }
+    getNeedBuildFiles() {
+        if (this._needBuildFiles.length > 0) {
+            return this._needBuildFiles;
+        }
+    }
+    getAllProjectFiles() {
+        return this.getModulePath(this.getModuleName()) + '/**/*.ts';
     }
     build(callback) {
         if (!this._isCompling && this.sbtModule.isDirty()) {
@@ -75,7 +85,8 @@ class BuildTools extends BaseTools_1.BaseTools {
                 delete tsProject.options['outDir'];
             }
             this.buildDeps();
-            gulp.src(this.getModulePath(this.getModuleName()) + '/**/*.ts')
+            var startBuildTime = new Date().getTime();
+            gulp.src(this.getNeedBuildFiles() || this.getAllProjectFiles())
                 .pipe(sourcemaps.init())
                 .pipe(ts(tsProject))
                 .pipe(sourcemaps.write('.', { includeContent: true, sourceRoot: '..' }))
@@ -84,6 +95,9 @@ class BuildTools extends BaseTools_1.BaseTools {
                 this._isCompling = false;
                 this.sbtModule.updateComplieTime();
                 console.log('build ' + this.getModuleName() + ' finish!');
+                var endBuildTime = new Date().getTime();
+                console.log('cost time: ' + (endBuildTime - startBuildTime));
+                this._needBuildFiles = [];
                 if (callback)
                     callback();
             });

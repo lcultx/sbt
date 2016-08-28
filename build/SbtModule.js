@@ -25,6 +25,10 @@ class SbtModule {
     isDirty() {
         return this.getComplieTime() < this.getModifyTime();
     }
+    build() {
+    }
+    buildDeps() {
+    }
 }
 exports.SbtModule = SbtModule;
 //# sourceMappingURL=SbtModule.js.map
