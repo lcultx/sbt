@@ -1,10 +1,13 @@
 {
-  "name": "tbt",
+  "name": "sbt",
   "version": "1.0.0",
   "description": "typescript build tools",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "sbt": "./build/main.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +18,10 @@
   "bugs": {
     "url": "https://github.com/nil84/tbt/issues"
   },
-  "homepage": "https://github.com/nil84/tbt#readme"
+  "homepage": "https://github.com/nil84/tbt#readme",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^2.13.6",
+    "typescript": "^1.8.10"
+  }
 }
