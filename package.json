@@ -2,7 +2,7 @@
   "name": "sbt",
   "version": "1.0.0",
   "description": "typescript build tools",
-  "main": "index.js",
+  "main": "./build/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
