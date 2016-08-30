@@ -100,7 +100,6 @@ export class BaseTools {
          var configFile = allConfigs[i];
          var config = new SbtModuleConfig();
          config.initByFile(configFile);
-         debugger;
          if (this._moduleConfigs[config.name]) {
             console.log('module ' + config.name + ' already exist!');
          } else {

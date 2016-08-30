@@ -1,7 +1,7 @@
 {
-  "name": "sbt",
-  "version": "1.0.0",
-  "description": "typescript build tools",
+  "name": "node-sbt",
+  "version": "1.0.3",
+  "description": "super build tools",
   "main": "./build/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,22 +11,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nil84/tbt.git"
+    "url": "git+https://github.com/nil84/sbt.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/nil84/tbt/issues"
+    "url": "https://github.com/nil84/sbt/issues"
   },
-  "homepage": "https://github.com/nil84/tbt#readme",
+  "homepage": "https://github.com/nil84/sbt#readme",
   "dependencies": {
     "async": "^2.0.1",
     "chokidar": "^1.6.0",
     "commander": "^2.9.0",
-    "gulp": "^3.9.1",
-    "gulp-callback": "0.0.3",
-    "gulp-sourcemaps": "^1.6.0",
-    "gulp-typescript": "^2.13.6",
     "nedb": "^1.8.0",
     "typescript": "^1.8.10"
   }

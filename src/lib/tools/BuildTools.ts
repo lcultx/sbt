@@ -1,9 +1,7 @@
 import * as gulp from 'gulp';
 import * as path from 'path';
 import * as fs from 'fs';
-var sourcemaps = require('gulp-sourcemaps');
 import {BuildToolsFactory} from './BuildToolsFactory';
-var gcallback = require('gulp-callback');
 
 import {BaseTools} from './BaseTools';
 var chokidar = require('chokidar');
@@ -67,8 +65,8 @@ export class BuildTools extends BaseTools {
       this.sbtModule = new SbtModule(this.getModuleConfig(moduleName));
    }
 
-   
-   public getThisModuleConfig(){
+
+   public getThisModuleConfig() {
       var moduleName = this.getModuleName();
       return this.getModuleConfig(moduleName)
    }
@@ -154,6 +152,26 @@ export class BuildTools extends BaseTools {
       //     dir
       // ],callback)
       //var tsconfig = path.join(this.getModulePath(this.getModuleName()), 'tsconfig.json');
+      if(!this._tsComplieOptions){
+         this.prepareComplieOptions();
+      }
+
+      if (!this._isCompling && this.sbtModule.isDirty()) {
+         this._isCompling = true;
+         var build = (callback?: Function) => {
+            if (!this.firstBuild) {
+               this.firstBuildFinish = true;
+               this.firstBuild = false;
+            }
+            this.buildDeps();
+            this.complie();
+            if (callback) callback();
+         }
+         setTimeout(build, 10)
+      }
+   }
+
+   public prepareComplieOptions() {
       this._tsComplieOptions = {
          target: ts.ScriptTarget.ES5,
          module: ts.ModuleKind.CommonJS,
@@ -170,21 +188,8 @@ export class BuildTools extends BaseTools {
          jsx: ts.JsxEmit.React
       }
       var moduleConfig = this.getThisModuleConfig();
-      if(moduleConfig.loaderType == 'amd'){
+      if (moduleConfig.loaderType == 'amd') {
          this._tsComplieOptions.module = ts.ModuleKind.AMD;
-      }
-
-      if (!this._isCompling && this.sbtModule.isDirty()) {
-         this._isCompling = true;
-         var build = (callback?: Function) => {
-            if (!this.firstBuild) {
-               this.firstBuildFinish = true;
-               this.firstBuild = false;
-            }
-            this.complie();
-            if (callback) callback();
-         }
-         setTimeout(build, 10)
       }
    }
 
