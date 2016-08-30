@@ -2,8 +2,8 @@
 /// <reference path="../typings/tsd.d.ts" />
 "use strict";
 import * as program from 'commander';
-import {BuildTools} from './BuildTools';
-import {AstTools} from './AstTools';
+import {BuildTools} from './lib/tools/BuildTools';
+import {AstTools} from './lib/tools/AstTools';
 
 // 初始化空间
 
@@ -22,6 +22,7 @@ let a = 1;
 program.command('build <module_name>')
    .option("-w, --watchFile")
    .option("-q, --quickMode")
+   .option("-d, --debugMode")
    .action(function (moduleName, options) {
       console.log('build ' + moduleName);
       var buildTools = new BuildTools(moduleName);
@@ -31,8 +32,10 @@ program.command('build <module_name>')
          if (options.quickMode) {
             buildTools.enableQuickMode();
          }
+         if(options.debugMode){
+            buildTools.enableDebugMode();
+         }
          buildTools.watchFilesAndBuild();
-         buildTools.build((err) => { });
       }
 
 
