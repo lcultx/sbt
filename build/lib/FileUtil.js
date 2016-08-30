@@ -1,7 +1,7 @@
 "use strict";
-const path = require('path');
-const fs = require('fs');
-const async = require('async');
+var path = require('path');
+var fs = require('fs');
+var async = require('async');
 function mkdirs(dirpath, mode, callback) {
     fs.exists(dirpath, function (exists) {
         if (exists) {

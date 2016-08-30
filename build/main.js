@@ -1,16 +1,32 @@
 #!/usr/bin/env node
 "use strict";
-const program = require('commander');
-const BuildTools_1 = require('./BuildTools');
+var program = require('commander');
+var BuildTools_1 = require('./BuildTools');
+var AstTools_1 = require('./AstTools');
 program.version('0.0.1');
-let a = 1;
+var a = 1;
 program.command('build <module_name>')
     .option("-w, --watchFile")
+    .option("-q, --quickMode")
     .action(function (moduleName, options) {
     console.log('build ' + moduleName);
     var buildTools = new BuildTools_1.BuildTools(moduleName);
-    buildTools.watchFilesAndBuild();
-    buildTools.build((err) => { });
+    if (moduleName.indexOf('.ts') > -1) {
+        buildTools.complie();
+    }
+    else {
+        if (options.quickMode) {
+            buildTools.enableQuickMode();
+        }
+        buildTools.watchFilesAndBuild();
+        buildTools.build(function (err) { });
+    }
+});
+program.command('ast <module_name>')
+    .option("-s, --saveFile")
+    .action(function (moduleName, options) {
+    var astTools = new AstTools_1.AstTools();
+    astTools.parser(moduleName);
 });
 program.on('--help', function () {
     console.log('  Examples:');

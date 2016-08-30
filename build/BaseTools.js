@@ -1,23 +1,23 @@
 "use strict";
-const path = require('path');
-const fs = require('fs');
-const FileUtil_1 = require('./lib/FileUtil');
-class BaseTools {
-    constructor(configFiles) {
+var path = require('path');
+var fs = require('fs');
+var FileUtil_1 = require('./lib/FileUtil');
+var BaseTools = (function () {
+    function BaseTools(configFiles) {
         this._root_path = process.cwd();
         this._configFiles = configFiles;
         this.loadSbtDefaultConfig();
     }
-    getRootPath() {
+    BaseTools.prototype.getRootPath = function () {
         return this._root_path;
-    }
-    getDefaultConfig() {
+    };
+    BaseTools.prototype.getDefaultConfig = function () {
         return this._sbtDefaultConfig;
-    }
-    getModuleConfigPath(module_path) {
+    };
+    BaseTools.prototype.getModuleConfigPath = function (module_path) {
         return path.join(module_path, '');
-    }
-    loadSbtDefaultConfig() {
+    };
+    BaseTools.prototype.loadSbtDefaultConfig = function () {
         var configFile = path.join(this.getRootPath(), 'sbt.config.js');
         if (fs.existsSync(configFile)) {
             this._sbtDefaultConfig = require(configFile);
@@ -29,32 +29,33 @@ class BaseTools {
                 sourcePath: ['src']
             };
         }
-    }
-    loadModuleConfig(file) {
+    };
+    BaseTools.prototype.loadModuleConfig = function (file) {
         var config = require(file);
         return config;
-    }
-    getModuleConfig(name) {
+    };
+    BaseTools.prototype.getModuleConfig = function (name) {
         var configs = this.getModuleConfigs();
         var item = configs[name];
+        item.config.path = item.path;
         if (item) {
             return item.config;
         }
-    }
-    getModulePath(name) {
+    };
+    BaseTools.prototype.getModulePath = function (name) {
         var configs = this.getModuleConfigs();
         var item = configs[name];
         if (item) {
             return item.path;
         }
-    }
-    getModuleConfigs() {
+    };
+    BaseTools.prototype.getModuleConfigs = function () {
         if (!this._moduleConfigs) {
             this.loadAllModuleConfigs();
         }
         return this._moduleConfigs;
-    }
-    loadAllModuleConfigs() {
+    };
+    BaseTools.prototype.loadAllModuleConfigs = function () {
         this._moduleConfigs = {};
         var allConfigs = this.getAllConfigFiles();
         for (var i in allConfigs) {
@@ -70,14 +71,14 @@ class BaseTools {
                 };
             }
         }
-    }
-    getAllConfigFiles() {
+    };
+    BaseTools.prototype.getAllConfigFiles = function () {
         if (!this._configFiles) {
             this._configFiles = this._findModuleConfigs();
         }
         return this._configFiles;
-    }
-    _findModuleConfigs() {
+    };
+    BaseTools.prototype._findModuleConfigs = function () {
         var sbtConfig = this.getDefaultConfig();
         var allConfigs = [];
         for (var i in sbtConfig.sourcePath) {
@@ -89,7 +90,8 @@ class BaseTools {
             }
         }
         return allConfigs;
-    }
-}
+    };
+    return BaseTools;
+}());
 exports.BaseTools = BaseTools;
 //# sourceMappingURL=BaseTools.js.map

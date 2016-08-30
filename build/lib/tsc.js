@@ -1,8 +1,8 @@
 "use strict";
-const path = require('path');
+var path = require('path');
 var tsc_file = path.join(__dirname, '../../', 'node_modules', 'typescript', 'lib', 'tsc.js');
 function tsc(args, callback) {
-    const spawn = require('child_process').spawn;
+    var spawn = require('child_process').spawn;
     var call_args = [tsc_file];
     for (var i in args) {
         call_args.push(args[i]);
@@ -12,14 +12,14 @@ function tsc(args, callback) {
         cmd += call_args[i] + ' ';
     }
     console.log(cmd);
-    const tsc = spawn('node', call_args);
-    tsc.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
+    var tsc = spawn('node', call_args);
+    tsc.stdout.on('data', function (data) {
+        console.log("stdout: " + data);
     });
-    tsc.stderr.on('data', (data) => {
-        console.log(`stderr: ${data}`);
+    tsc.stderr.on('data', function (data) {
+        console.log("stderr: " + data);
     });
-    tsc.on('close', (code) => {
+    tsc.on('close', function (code) {
         callback(code);
     });
 }

@@ -3,6 +3,8 @@
 "use strict";
 import * as program from 'commander';
 import {BuildTools} from './BuildTools';
+import {AstTools} from './AstTools';
+
 // 初始化空间
 
 // program
@@ -19,11 +21,30 @@ let a = 1;
 
 program.command('build <module_name>')
    .option("-w, --watchFile")
+   .option("-q, --quickMode")
    .action(function (moduleName, options) {
       console.log('build ' + moduleName);
       var buildTools = new BuildTools(moduleName);
-      buildTools.watchFilesAndBuild();
-      buildTools.build((err) => { }); 
+      if (moduleName.indexOf('.ts') > -1) {
+         buildTools.complie();
+      } else {
+         if (options.quickMode) {
+            buildTools.enableQuickMode();
+         }
+         buildTools.watchFilesAndBuild();
+         buildTools.build((err) => { });
+      }
+
+
+   })
+
+program.command('ast <module_name>')
+   .option("-s, --saveFile")
+   // .option("-p, --property")
+   // .option("-m, --method")
+   .action(function (moduleName, options) {
+      var astTools = new AstTools();
+      astTools.parser(moduleName);
    })
 
 program.on('--help', function () {

@@ -1,56 +1,86 @@
 import * as Datastore from 'nedb';
 import * as path from 'path';
-
-var dbFile = path.join(process.cwd(),'.sbt','module');
+import * as fs from 'fs';
+import {scanSync} from './lib/FileUtil'
+var dbFile = path.join(process.cwd(), '.sbt', 'module');
 
 var db = new Datastore({ filename: dbFile });
 db.loadDatabase(function (err) {    // Callback is optional
-  // Now commands will be executed
+   // Now commands will be executed
 });
 
-export class SbtModule{
-    public name: string;
-    public deps: Array<string>;
-    public path:string;
+export class SbtModule {
+   public name: string;
+   public deps: Array<string>;
+   public path: string;
 
-    private _modifyTime:number;
-    private _complieTime:number;
+   private _modifyTime: number;
+   private _complieTime: number;
 
-    public isWatching:boolean;
+   private _refs:Array<string> = [];
 
-    public getModifyTime(){
-       return this._modifyTime || 0;
-    }
+   public isWatching: boolean;
 
-    constructor(config:{
-       name:string,
-       deps:Array<string>
-    }){
-       this.name = config.name;
-       this.deps = config.deps;
-    }
+   public getModifyTime() {
+      return this._modifyTime || 0;
+   }
 
-    public updateModifyTime(){
+   public addRef(ref:string){
+      this._refs.push(ref);
+   }
+
+   public getRefs(){
+      return this._refs;
+   }
+
+   constructor(config: {
+      name: string,
+      path?: string,
+      deps?: Array<string>
+   }) {
+      this.name = config.name;
+      this.deps = config.deps;
+      this.path = config.path;
+   }
+
+   public updateModifyTime() {
       this._modifyTime = new Date().getTime()
-    }
+   }
 
-    public getComplieTime(){
-       return this._complieTime || -1;
-    }
+   public getComplieTime() {
+      return this._complieTime || -1;
+   }
 
-    public updateComplieTime(){
-       this._complieTime = new Date().getTime();
-    }
+   public updateComplieTime() {
+      this._complieTime = new Date().getTime();
+   }
 
-    public isDirty(){
-       return this.getComplieTime() < this.getModifyTime()
-    }
+   public isDirty() {
+      return this.getComplieTime() < this.getModifyTime()
+   }
 
-    public build(){
+   public build() {
 
-    }
+   }
 
-    public buildDeps(){
-      
-    }
+   public buildDeps() {
+
+   }
+   private _tsFiles;
+   public getAllTsFiles():Array<string> {
+      if(!this._tsFiles){
+         this._tsFiles = scanSync(this.path,'.ts');
+      }
+      return this._tsFiles;
+   }
+
+   private _astConfig:{
+      exclude:Array<string>  
+   };
+   public getAstConfig(){
+      if(!this._astConfig){
+         this._astConfig = require(path.join(this.path,'ast.js'))
+      }
+      return this._astConfig
+   }
 }

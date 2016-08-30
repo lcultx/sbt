@@ -18,6 +18,7 @@ export class BaseTools {
          path: string,
          config: {
             name: string,
+            path:string,
             deps: Array<string>
          }
       }
@@ -63,6 +64,7 @@ export class BaseTools {
    public getModuleConfig(name: string) {
       var configs = this.getModuleConfigs();
       var item = configs[name];
+      item.config.path = item.path;
       if (item) {
          return item.config;
       }
