@@ -9,7 +9,8 @@
          "stopOnEntry": false,
          "args": [
             "build",
-            "tools"
+            "home",
+            "-q"
          ],
          "cwd": "d:\\Z-Project\\sk_design",
          "preLaunchTask": null,

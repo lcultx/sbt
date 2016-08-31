@@ -5,33 +5,40 @@ import * as program from 'commander';
 import {BuildTools} from './lib/tools/BuildTools';
 import {PublishTools} from './lib/tools/PublishTools';
 import {AstTools} from './lib/tools/AstTools';
-
+import {NativeBuildTools} from './lib/tools/NativeBuildTools';
 program.version('0.0.1');
 
 program.command('build <module_name>')
    .option("-w, --watchFile")
    .option("-q, --quickMode")
    .option("-d, --debugMode")
+   .option("-n, --nativeMode")
    .action(function (moduleName, options) {
       console.log('build ' + moduleName);
-      var buildTools = new BuildTools(moduleName);
-      if (moduleName.indexOf('.ts') > -1) {
+      if (options.nativeMode) {
+         let buildTools = new NativeBuildTools(moduleName);
          buildTools.complie();
       } else {
-         if (options.quickMode) {
-            buildTools.enableQuickMode();
-            options.watchFile = true;
-         }
-         if (options.debugMode) {
-            buildTools.enableDebugMode();
-         }
-         if(options.watchFile){
-            buildTools.watchFilesAndBuild();
-         }else{
+         let buildTools = new BuildTools(moduleName);
+         if (moduleName.indexOf('.ts') > -1) {
             buildTools.complie();
+         } else {
+            if (options.quickMode) {
+               buildTools.enableQuickMode();
+               options.watchFile = true;
+            }
+            if (options.debugMode) {
+               buildTools.enableDebugMode();
+            }
+            if (options.watchFile) {
+               buildTools.watchFilesAndBuild();
+            } else {
+               buildTools.complie();
+            }
+
          }
-         
       }
+
    })
 
 program.command('publish <module_name>')
