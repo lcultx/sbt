@@ -3,21 +3,10 @@
 "use strict";
 import * as program from 'commander';
 import {BuildTools} from './lib/tools/BuildTools';
+import {PublishTools} from './lib/tools/PublishTools';
 import {AstTools} from './lib/tools/AstTools';
 
-// 初始化空间
-
-// program
-//     .version('0.0.1')
-//     .option('-p, --peppers', 'Add peppers')
-//     .option('-P, --pineapple', 'Add pineapple')
-//     .option('-b, --bbq', 'Add bbq sauce')
-//     .option('-c, --cheese [type]', 'Add the specified type of cheese [marble]', 'marble')
-//     .parse(process.argv);
-
 program.version('0.0.1');
-
-let a = 1;
 
 program.command('build <module_name>')
    .option("-w, --watchFile")
@@ -31,13 +20,30 @@ program.command('build <module_name>')
       } else {
          if (options.quickMode) {
             buildTools.enableQuickMode();
+            options.watchFile = true;
          }
-         if(options.debugMode){
+         if (options.debugMode) {
             buildTools.enableDebugMode();
          }
-         buildTools.watchFilesAndBuild();
+         if(options.watchFile){
+            buildTools.watchFilesAndBuild();
+         }else{
+            buildTools.complie();
+         }
+         
       }
+   })
 
+program.command('publish <module_name>')
+   .option("-d, --debugMode")
+   .action(function (moduleName, options) {
+      console.log('build ' + moduleName);
+      var publishTools = new PublishTools(moduleName);
+
+      if (options.debugMode) {
+         publishTools.enableDebugMode();
+      }
+      publishTools.publish();
 
    })
 

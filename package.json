@@ -1,5 +1,5 @@
 {
-  "name": "node-sbt",
+  "name": "sbt-cli",
   "version": "1.0.3",
   "description": "super build tools",
   "main": "./build/main.js",
@@ -23,7 +23,10 @@
     "async": "^2.0.1",
     "chokidar": "^1.6.0",
     "commander": "^2.9.0",
+    "fs-extra": "^0.30.0",
+    "lzma": "^2.3.2",
     "nedb": "^1.8.0",
-    "typescript": "^1.8.10"
+    "typescript": "^1.8.10",
+    "uglify-js": "^2.7.3"
   }
 }

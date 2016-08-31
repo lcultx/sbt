@@ -17,7 +17,7 @@ export class BuildTools extends BaseTools {
    private _isCompling: boolean;
 
    private _dest: string;
-   private _tsComplieOptions: ts.CompilerOptions;
+   protected _tsComplieOptions: ts.CompilerOptions;
    private _isDepModule: boolean;
 
    private _factory: BuildToolsFactory;
@@ -152,9 +152,6 @@ export class BuildTools extends BaseTools {
       //     dir
       // ],callback)
       //var tsconfig = path.join(this.getModulePath(this.getModuleName()), 'tsconfig.json');
-      if(!this._tsComplieOptions){
-         this.prepareComplieOptions();
-      }
 
       if (!this._isCompling && this.sbtModule.isDirty()) {
          this._isCompling = true;
@@ -195,6 +192,10 @@ export class BuildTools extends BaseTools {
 
    public complie() {
       var startBuildTime = new Date().getTime();
+      if (!this._tsComplieOptions) {
+         this.prepareComplieOptions();
+      }
+
       this._isCompling = true;
       var files = [];
 
