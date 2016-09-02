@@ -90,46 +90,51 @@ export class BuildTools extends BaseTools {
       this.watchFilesThenBuild();
    }
 
+   private _watched: boolean = false;
 
    public watchFilesThenBuild() {
-      var dir = this.getModulePath(this.getModuleName())
-      console.log('watching ' + dir);
-      var build = (msg, printMsg?: boolean) => {
-         console.log(msg);
-         this.build();
+      if (!this._watched) {
+         this._watched = true;
+         var dir = this.getModulePath(this.getModuleName())
+         console.log('watching ' + dir);
+         var build = (msg, printMsg?: boolean) => {
+            console.log(msg);
+            this.build();
+         }
+         var watcher = chokidar.watch(dir, { ignored: /^\./, persistent: true });
+         this.sbtModule.isWatching = true;
+         watcher
+            .on('add', (file) => {
+               this.sbtModule.updateModifyTime();
+               if (this._forceMode) {
+                  this.addFileToNextComplie(file);
+               }
+               if (file.indexOf('_ref') > -1) {
+                  this.sbtModule.addRef(file);
+               }
+               if (!this.firstBuild && this.firstBuildFinish) {
+                  build(file + ' added!');
+               }
+            })
+            .on('change', (file) => {
+               this.sbtModule.updateModifyTime();
+               // if(path.basename(filepath).indexOf('module.js')> -1){
+               //    console.log(filepath + ' updated!');
+               // }else{
+               this.addFileToNextComplie(file)
+               build(file + ' changed!');
+               //}
+            })
+            .on('unlink', (filepath) => {
+               this.sbtModule.updateModifyTime();
+               build(filepath + ' unlink!', true);
+            })
+            .on('error', function (error) { console.error('Error happened', error); })
+            .on('ready', () => {
+               build('watcher scan ready, start build ' + this.getModuleName() + '...');
+            })
       }
-      var watcher = chokidar.watch(dir, { ignored: /^\./, persistent: true });
-      this.sbtModule.isWatching = true;
-      watcher
-         .on('add', (file) => {
-            this.sbtModule.updateModifyTime();
-            if (this._forceMode) {
-               this.addFileToNextComplie(file);
-            }
-            if (file.indexOf('_ref') > -1) {
-               this.sbtModule.addRef(file);
-            }
-            if (!this.firstBuild && this.firstBuildFinish) {
-               build(file + ' added!');
-            }
-         })
-         .on('change', (file) => {
-            this.sbtModule.updateModifyTime();
-            // if(path.basename(filepath).indexOf('module.js')> -1){
-            //    console.log(filepath + ' updated!');
-            // }else{
-            this.addFileToNextComplie(file)
-            build(file + ' changed!');
-            //}
-         })
-         .on('unlink', (filepath) => {
-            this.sbtModule.updateModifyTime();
-            build(filepath + ' unlink!', true);
-         })
-         .on('error', function (error) { console.error('Error happened', error); })
-         .on('ready', () => {
-            build('watcher scan ready, start build ' + this.getModuleName() + '...');
-         })
+
    }
 
    private _needComplieFiles = [];
@@ -162,7 +167,12 @@ export class BuildTools extends BaseTools {
       if (!this._tsComplieOptions) {
          this.prepareComplieOptions();
       }
+      // if (this._buildChildMode) {
+      //    this.buildDeps();
+      // }
+      // this.complie();
 
+      //延迟10毫秒 防止多次更改
       if (!this._isCompling && this.sbtModule.isDirty()) {
          this._isCompling = true;
          var build = (callback?: Function) => {
@@ -170,7 +180,9 @@ export class BuildTools extends BaseTools {
                this.firstBuildFinish = true;
                this.firstBuild = false;
             }
-            this.buildDeps();
+            if (this._buildChildMode) {
+               this.buildDeps();
+            }
             this.complie();
             if (callback) callback();
          }
@@ -278,55 +290,55 @@ export class BuildTools extends BaseTools {
 
    public buildDeps() {
 
-      if (this._buildChildMode) {
+      //if (this._buildChildMode) {
 
-         var config = this.getModuleConfig(this.getModuleName());
+      var config = this.getModuleConfig(this.getModuleName());
 
-         // for (var i in config.deps) {
-         //    var dep = config.deps[i];
-         //    if (cluster.isMaster) {
-         //       var worker = cluster.fork();
-         //    } else if (cluster.isWorker) {
-         //       this.buildDep(dep);
-         //    }
-         // }
+      // for (var i in config.deps) {
+      //    var dep = config.deps[i];
+      //    if (cluster.isMaster) {
+      //       var worker = cluster.fork();
+      //    } else if (cluster.isWorker) {
+      //       this.buildDep(dep);
+      //    }
+      // }
 
-         // for (var i in config.deps) {
-         //    var dep = config.deps[i];
+      // for (var i in config.deps) {
+      //    var dep = config.deps[i];
 
-         //    this._buildInChildProcess(dep);
+      //    this._buildInChildProcess(dep);
 
-         // }
+      // }
 
-         for (var i in config.deps) {
-            var dep = config.deps[i];
-            var buildTools = this._factory.createBuildTools(dep, this.getAllConfigFiles(),
-               this._tsComplieOptions, true
-            );
-            buildTools.setBuildDest(this.getBuildDest())
+      for (var i in config.deps) {
+         var dep = config.deps[i];
+         var buildTools = this._factory.createBuildTools(dep, this.getAllConfigFiles(),
+            this._tsComplieOptions, true
+         );
+         buildTools.setBuildDest(this.getBuildDest())
 
-            if (this._quickMode) {
-               buildTools.enableQuickMode();
-            }
-            if (this.isDebugModeEnabled()) {
-               buildTools.enableDebugMode()
-            }
-            if (this._forceMode) {
-               buildTools.enableForceMode();
-            }
-            buildTools.enableBuildChildMode();
-            if (this._quickMode) {
-               buildTools.quickComplie();
-            } else {
-               buildTools.complie();
-            }
+         if (this._quickMode) {
+            buildTools.enableQuickMode();
          }
-
+         if (this.isDebugModeEnabled()) {
+            buildTools.enableDebugMode()
+         }
+         if (this._forceMode) {
+            buildTools.enableForceMode();
+         }
+         buildTools.enableBuildChildMode();
+         if (this._quickMode) {
+            buildTools.quickComplie();
+         } else {
+            buildTools.complie();
+         }
       }
 
-
-
-
    }
+
+
+
+
+   // }
 }
 

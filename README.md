@@ -1,5 +1,5 @@
 
-SBT被设计用来编译大型Typescript项目
+sbt被设计用来编译大型Typescript项目
 
 目前支持以下特性：
 
