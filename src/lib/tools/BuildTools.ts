@@ -1,6 +1,9 @@
 import * as gulp from 'gulp';
 import * as path from 'path';
 import * as fs from 'fs';
+// var cluster = require('cluster');
+// import * as buildMrg from './buildMrg';
+
 import {BuildToolsFactory} from './BuildToolsFactory';
 
 import {BaseTools} from './BaseTools';
@@ -83,8 +86,12 @@ export class BuildTools extends BaseTools {
       this._dest = dest;
    }
 
+   public quickComplie() {
+      this.watchFilesThenBuild();
+   }
 
-   public watchFilesAndBuild() {
+
+   public watchFilesThenBuild() {
       var dir = this.getModulePath(this.getModuleName())
       console.log('watching ' + dir);
       var build = (msg, printMsg?: boolean) => {
@@ -96,7 +103,9 @@ export class BuildTools extends BaseTools {
       watcher
          .on('add', (file) => {
             this.sbtModule.updateModifyTime();
-            this.addFileToNextComplie(file);
+            if (this._forceMode) {
+               this.addFileToNextComplie(file);
+            }
             if (file.indexOf('_ref') > -1) {
                this.sbtModule.addRef(file);
             }
@@ -134,9 +143,7 @@ export class BuildTools extends BaseTools {
    }
 
    public getNeedComplieFiles() {
-      if (this._needComplieFiles.length > 0) {
-         return this._needComplieFiles;
-      }
+      return this._needComplieFiles;
    }
 
    public getAllProjectFiles() {
@@ -152,6 +159,9 @@ export class BuildTools extends BaseTools {
       //     dir
       // ],callback)
       //var tsconfig = path.join(this.getModulePath(this.getModuleName()), 'tsconfig.json');
+      if (!this._tsComplieOptions) {
+         this.prepareComplieOptions();
+      }
 
       if (!this._isCompling && this.sbtModule.isDirty()) {
          this._isCompling = true;
@@ -168,6 +178,12 @@ export class BuildTools extends BaseTools {
       }
    }
 
+   private _forceMode: boolean = false;
+   public enableForceMode() {
+      this._forceMode = true;
+   }
+
+
    public prepareComplieOptions() {
       this._tsComplieOptions = {
          target: ts.ScriptTarget.ES5,
@@ -182,7 +198,8 @@ export class BuildTools extends BaseTools {
          experimentalDecorators: true,
          sourceMap: true,
          outDir: './build',
-         jsx: ts.JsxEmit.React
+         jsx: ts.JsxEmit.React,
+         noImplicitUseStrict: true
       }
       var moduleConfig = this.getThisModuleConfig();
       if (moduleConfig.loaderType == 'amd') {
@@ -206,13 +223,16 @@ export class BuildTools extends BaseTools {
       }
 
       console.log('start build ' + this.getModuleName() + ', with ' + files.length + ' files... ');
-      var refs = this.sbtModule.getRefs();
-      for (var i in refs) {
-         var ref = refs[i];
-         if (files.indexOf(ref) == -1) {
-            files.push(ref);
+      if (files.length > 0) {
+         var refs = this.sbtModule.getRefs();
+         for (var i in refs) {
+            var ref = refs[i];
+            if (files.indexOf(ref) == -1) {
+               files.push(ref);
+            }
          }
       }
+
 
       if (this.isDebugModeEnabled()) {
          console.log(files.sort());
@@ -239,18 +259,74 @@ export class BuildTools extends BaseTools {
       console.log('build ' + this.getModuleName() + ' finish, time cost: ', endBuildTime - startBuildTime);
    }
 
+   private _buildInChildProcess(dep) {
+      // buildMrg.build({
+      //    moduleName: dep,
+      //    configFiles: this.getAllConfigFiles(),
+      //    tsComplieOptions: this._tsComplieOptions,
+      //    isDepModule: true,
+      //    debugMode: this.isDebugModeEnabled(),
+      //    quickMode: this._quickMode
+      // })
+
+   }
+
+   private _buildChildMode: boolean = false;
+   public enableBuildChildMode() {
+      this._buildChildMode = true;
+   }
+
    public buildDeps() {
-      var config = this.getModuleConfig(this.getModuleName());
-      for (var i in config.deps) {
-         var dep = config.deps[i];
-         var buildTools = this._factory.createBuildTools(dep, this.getAllConfigFiles(),
-            this._tsComplieOptions, true
-         );
-         buildTools.setBuildDest(this.getBuildDest())
-         if (!buildTools.sbtModule.isWatching) {
-            buildTools.watchFilesAndBuild();
+
+      if (this._buildChildMode) {
+
+         var config = this.getModuleConfig(this.getModuleName());
+
+         // for (var i in config.deps) {
+         //    var dep = config.deps[i];
+         //    if (cluster.isMaster) {
+         //       var worker = cluster.fork();
+         //    } else if (cluster.isWorker) {
+         //       this.buildDep(dep);
+         //    }
+         // }
+
+         // for (var i in config.deps) {
+         //    var dep = config.deps[i];
+
+         //    this._buildInChildProcess(dep);
+
+         // }
+
+         for (var i in config.deps) {
+            var dep = config.deps[i];
+            var buildTools = this._factory.createBuildTools(dep, this.getAllConfigFiles(),
+               this._tsComplieOptions, true
+            );
+            buildTools.setBuildDest(this.getBuildDest())
+
+            if (this._quickMode) {
+               buildTools.enableQuickMode();
+            }
+            if (this.isDebugModeEnabled()) {
+               buildTools.enableDebugMode()
+            }
+            if (this._forceMode) {
+               buildTools.enableForceMode();
+            }
+            buildTools.enableBuildChildMode();
+            if (this._quickMode) {
+               buildTools.quickComplie();
+            } else {
+               buildTools.complie();
+            }
          }
+
       }
+
+
+
+
    }
 }
 

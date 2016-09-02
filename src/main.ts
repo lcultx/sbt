@@ -9,9 +9,10 @@ import {NativeBuildTools} from './lib/tools/NativeBuildTools';
 program.version('0.0.1');
 
 program.command('build <module_name>')
-   .option("-w, --watchFile")
    .option("-q, --quickMode")
+   .option("-f, --forceMode")
    .option("-d, --debugMode")
+   .option("-c, --buildChildMode")
    .option("-n, --nativeMode")
    .action(function (moduleName, options) {
       console.log('build ' + moduleName);
@@ -25,14 +26,19 @@ program.command('build <module_name>')
          } else {
             if (options.quickMode) {
                buildTools.enableQuickMode();
-               options.watchFile = true;
             }
             if (options.debugMode) {
                buildTools.enableDebugMode();
             }
-            if (options.watchFile) {
-               buildTools.watchFilesAndBuild();
-            } else {
+            if(options.forceMode){
+               buildTools.enableForceMode();
+            }
+            if(options.buildChildMode){
+               buildTools.enableBuildChildMode();
+            }
+            if(options.quickMode){
+               buildTools.quickComplie();
+            }else{
                buildTools.complie();
             }
 
