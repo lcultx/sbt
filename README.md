@@ -1,7 +1,7 @@
 
-受UnrealBuildTool启发, 用于大型Typescript项目分模块编译
+SBT被设计用来编译大型Typescript项目
 
-Roadmap：
+目前支持以下特性：
 
 1. 在配置文件中指定依赖 ，如依赖模块不存在，或依赖模块已过时 编译该被依赖模块 否则只编译模块本身 Complete
 
@@ -19,12 +19,15 @@ Roadmap：
 
 
 安装方法：（在任意目录执行）
+
 `
 npm install sbt-cli -g
 `
 
 
 使用方式：(在项目根路径运行)
+
+编译：
 
 `
  > sbt build --help
@@ -42,3 +45,20 @@ npm install sbt-cli -g
     -jar, --jarMode       会根据module.js中的jar配置 把模块编译成jar包 供后端开发使用
 
 `
+
+发布：
+
+`
+> sbt publish --help
+
+  Usage: publish [options] <module_name>
+
+  Options:
+
+    -h, --help       output usage information
+    -d, --debugMode
+
+`
+
+
+如何编写module.js [TODO]
