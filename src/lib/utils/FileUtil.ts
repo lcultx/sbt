@@ -22,7 +22,7 @@ export var scan = function (dir: string, suffix: string, callback: Function) {
       async.each(files, function (file, next) {
          var filePath = path.join(dir,file);
          fs.stat(filePath, function (err, stat) {
-            if (err) {
+            if (err) { 
                return next(err);
             }
             if (stat.isDirectory()) {

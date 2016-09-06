@@ -17,7 +17,7 @@
       "outDir": "../build",
       "moduleResolution": "node"
    },
-   "formatCodeOptions": {
+   "formatCodeOptions": { 
       "indentSize": 3,
       "tabSize": 3,
       "newLineCharacter": "\r\n",

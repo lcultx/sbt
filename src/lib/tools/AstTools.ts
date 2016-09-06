@@ -30,7 +30,7 @@ export class AstTools extends BaseTools {
          var line = lines[i];
          this.parseLine(line)
       }
-   }
+   } 
 
    private mreg = /[^}]*?\s+([^=:\(\()@\.]*)\s+{/;
    private preg = /(public)|(private)/;

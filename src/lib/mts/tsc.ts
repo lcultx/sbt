@@ -13,7 +13,7 @@ export function tsc(args:Array<string>,callback:Function) {
     }
     console.log(cmd);
 
-
+ 
     const tsc = spawn('node',call_args);
 
     tsc.stdout.on('data', (data) => {

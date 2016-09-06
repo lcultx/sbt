@@ -26,7 +26,7 @@ export class PublishTools extends BuildTools {
          outFile: './build/' + this.getModuleName() + '.js',
          jsx: ts.JsxEmit.React
       }
-
+ 
    }
 
    public publish() {

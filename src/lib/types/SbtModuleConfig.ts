@@ -34,7 +34,7 @@ export class PublishConfig{
    public beforeAddVersionNumber:Function;
    public afterAddVersionNumber:Function;
 
-}
+} 
 export class SbtModuleConfig{
      public name: string
      public path:string

@@ -2,7 +2,7 @@ import * as path from 'path'
 
 function getFileName(file) {
    return path.basename(file).split(path.dirname(file))[0]
-}
+} 
 
 export function gcc(args: Array<string>, callback: Function) {
    const spawn = require('child_process').spawn;

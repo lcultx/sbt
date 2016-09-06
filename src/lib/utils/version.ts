@@ -108,5 +108,5 @@ export function addVersionNumberToFiles(files){
    for(var i in files){
       var file = files[i];
       replaceFileContent(file);
-   }
+   } 
 }

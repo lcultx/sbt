@@ -186,7 +186,7 @@ export class BuildTools extends BaseTools {
             this.complie();
             if (callback) callback();
          }
-         setTimeout(build, 10)
+         setTimeout(build, 10) 
       }
    }
 
@@ -203,7 +203,7 @@ export class BuildTools extends BaseTools {
          allowJs: true,
          noImplicitAny: false,
          removeComments: false,
-         noLib: false,
+         noLib: false, 
          preserveConstEnums: true,
          suppressImplicitAnyIndexErrors: true,
          emitDecoratorMetadata: true,

@@ -51,7 +51,7 @@ export class SbtModule {
    public getComplieTime() {
       return this._complieTime || -1;
    }
-
+ 
    public updateComplieTime() {
       this._complieTime = new Date().getTime();
    }

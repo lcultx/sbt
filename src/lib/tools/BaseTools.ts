@@ -113,7 +113,7 @@ export class BaseTools {
       if (!this._configFiles) {
          this._configFiles = this._findModuleConfigs();
       }
-      return this._configFiles;
+      return this._configFiles; 
    }
 
    private _findModuleConfigs() {

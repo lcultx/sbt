@@ -8,7 +8,7 @@ export function ts2c(args:Array<string>,callback:Function) {
     }
 
     var cmd = 'node ';
-    for(var i in call_args){
+    for(var i in call_args){  
         cmd += call_args[i] + ' ';
     }
     console.log(cmd);

@@ -23,6 +23,6 @@ export class NativeBuildTools extends BuildTools {
 
    private getFileName(file){
       return path.basename(file).split(path.dirname(file))[0]
-   }
+   } 
 }
 
