@@ -15,7 +15,8 @@
       "jsx": "react",
       "declaration":false,
       "outDir": "../build",
-      "moduleResolution": "node"
+      "moduleResolution": "node",
+      "newLine": "LF"
    },
    "formatCodeOptions": { 
       "indentSize": 3,
