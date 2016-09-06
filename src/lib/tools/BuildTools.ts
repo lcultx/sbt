@@ -186,7 +186,7 @@ export class BuildTools extends BaseTools {
             this.complie();
             if (callback) callback();
          }
-         setTimeout(build, 10) 
+         setTimeout(build, 10)
       }
    }
 
@@ -203,19 +203,29 @@ export class BuildTools extends BaseTools {
          allowJs: true,
          noImplicitAny: false,
          removeComments: false,
-         noLib: false, 
+         noLib: false,
          preserveConstEnums: true,
          suppressImplicitAnyIndexErrors: true,
          emitDecoratorMetadata: true,
          experimentalDecorators: true,
          sourceMap: true,
-         outDir: './build',
          jsx: ts.JsxEmit.React,
          noImplicitUseStrict: true
       }
       var moduleConfig = this.getThisModuleConfig();
       if (moduleConfig.loaderType == 'amd') {
          this._tsComplieOptions.module = ts.ModuleKind.AMD;
+         this._tsComplieOptions.outFile = './build/' + this.getModuleName() + '.js';
+         if(this._quickMode){
+            console.log("can't use quick mode with amd module build yet!");
+            process.exit();
+         }
+         if(this._buildChildMode){
+            console.log("you don't need use -c params with amd module build");
+            process.exit();
+         }
+      } else {
+         this._tsComplieOptions.outDir = './build'
       }
    }
 
