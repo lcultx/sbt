@@ -42,6 +42,9 @@ export class SbtModuleConfig{
      public configFilePath:string;
      public loaderType:string;
 
+     public declaration:boolean;
+     public allowJs:boolean;
+
      public publish:PublishConfig;
 
      public initByFile(file:string){
@@ -52,6 +55,9 @@ export class SbtModuleConfig{
         this.deps = config.deps;
         this.loaderType = config.loaderType;
         this.publish = config.publish;
+
+        this.allowJs = config.allowJs;
+        this.declaration = config.declaration;
      }
 
 }

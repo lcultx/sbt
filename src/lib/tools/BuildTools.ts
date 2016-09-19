@@ -199,8 +199,6 @@ export class BuildTools extends BaseTools {
    public prepareComplieOptions() {
       this._tsComplieOptions = {
          target: ts.ScriptTarget.ES5,
-         module: ts.ModuleKind.CommonJS,
-         allowJs: true,
          noImplicitAny: false,
          removeComments: false,
          noLib: false,
@@ -210,7 +208,8 @@ export class BuildTools extends BaseTools {
          experimentalDecorators: true,
          sourceMap: true,
          jsx: ts.JsxEmit.React,
-         noImplicitUseStrict: true
+         noImplicitUseStrict: true,
+         moduleResolution :ts.ModuleResolutionKind.Classic
       }
       var moduleConfig = this.getThisModuleConfig();
       if (moduleConfig.loaderType == 'amd') {
@@ -225,11 +224,21 @@ export class BuildTools extends BaseTools {
             process.exit();
          }
       } else {
-         this._tsComplieOptions.outDir = './build'
+         this._tsComplieOptions.outDir = './build';
+         this._tsComplieOptions.moduleResolution = ts.ModuleResolutionKind.NodeJs;
+      }
+
+      if(moduleConfig.declaration){
+         this._tsComplieOptions.declaration = true;
+      }
+
+      if(moduleConfig.allowJs){
+         this._tsComplieOptions.allowJs = true;   
       }
    }
 
    public complie() {
+      console.log(new Date())
       var startBuildTime = new Date().getTime();
       if (!this._tsComplieOptions) {
          this.prepareComplieOptions();
@@ -245,6 +254,7 @@ export class BuildTools extends BaseTools {
       }
 
       console.log('start build ' + this.getModuleName() + ', with ' + files.length + ' files... ');
+
       if (files.length > 0) {
          var refs = this.sbtModule.getRefs();
          for (var i in refs) {
@@ -270,6 +280,7 @@ export class BuildTools extends BaseTools {
       let allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
 
       allDiagnostics.forEach(diagnostic => {
+         //console.log(diagnostic)
          let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
          let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
          console.log(`${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`);
