@@ -209,7 +209,7 @@ export class BuildTools extends BaseTools {
          sourceMap: true,
          jsx: ts.JsxEmit.React,
          noImplicitUseStrict: true,
-         moduleResolution :ts.ModuleResolutionKind.Classic
+         moduleResolution :ts.ModuleResolutionKind.NodeJs
       }
       var moduleConfig = this.getThisModuleConfig();
       if (moduleConfig.loaderType == 'amd') {
@@ -225,7 +225,7 @@ export class BuildTools extends BaseTools {
          }
       } else {
          this._tsComplieOptions.outDir = './build';
-         this._tsComplieOptions.moduleResolution = ts.ModuleResolutionKind.NodeJs;
+         //this._tsComplieOptions.moduleResolution = ts.ModuleResolutionKind.NodeJs;
       }
 
       if(moduleConfig.declaration){
