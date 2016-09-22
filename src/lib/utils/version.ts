@@ -60,11 +60,16 @@ function replaceLine(line){
    return line;
 }
 
+function clearVersionNumber(str){
+   return str.split('?version=')[0];
+}
+
 function replaceJRImportLine(line){
    var reg = /"(.*\.jr)"/;
    if(reg.test(line)){
       line = line.replace(/"(.*\.jr)"/g,function(){
          var p1 = arguments[1];
+         p1 = clearVersionNumber(p1);
          return '"' + p1 + '?version=' + version + '"'; 
       })
    }
@@ -76,17 +81,21 @@ function replaceStyleImportLine(line){
    if(reg.test(line)){
       line = line.replace(/href="(.*)".*type=/g,function(){
          var p1 = arguments[1];
+         p1 = clearVersionNumber(p1);
          return 'href="' + p1 + '?version=' + version + '" type='; 
       })
    }
    return line;
 }
 
+
+
 function replaceScriptImportLine(line){
    var reg = /src="(.*)"/;
    if(reg.test(line)){
       line = line.replace(/src="(.*)"/g,function(){
          var p1 = arguments[1];
+         p1 = clearVersionNumber(p1);
          return 'src="' + p1 + '?version=' + version + '"'; 
       })
    }
@@ -98,6 +107,7 @@ function replaceConfigVersionLine(line){
     if(reg.test(line)){
       line = line.replace(/(\'.*\')/g,function(){
          var p1 = arguments[1];
+         p1 = clearVersionNumber(p1);
          return "'" + version + "'"; 
       })
    }
@@ -107,6 +117,7 @@ function replaceConfigVersionLine(line){
 export function addVersionNumberToFiles(files){
    for(var i in files){
       var file = files[i];
+      console.log('addVersion number to file ' + file);
       replaceFileContent(file);
    } 
 }

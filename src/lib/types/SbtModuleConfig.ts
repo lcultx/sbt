@@ -35,6 +35,21 @@ export class PublishConfig{
    public afterAddVersionNumber:Function;
 
 } 
+
+export class BuildConfig{
+   public copyResource:boolean;
+   public addVersionNumber:boolean;
+   public copyResourceActions:Array<CopyAction>;
+   public needVersionFiles:Array<string>;
+   public beforeComplie:Function;
+   public afterComplie:Function;
+   public beforeCopyResource:Function;
+   public afterCompyResource:Function;
+   public beforeAddVersionNumber:Function;
+   public afterAddVersionNumber:Function;
+
+} 
+
 export class SbtModuleConfig{
      public name: string
      public path:string
@@ -46,6 +61,7 @@ export class SbtModuleConfig{
      public allowJs:boolean;
 
      public publish:PublishConfig;
+     public build:BuildConfig;
 
      public initByFile(file:string){
         this.configFilePath = file;
@@ -55,7 +71,7 @@ export class SbtModuleConfig{
         this.deps = config.deps;
         this.loaderType = config.loaderType;
         this.publish = config.publish;
-
+        this.build = config.build;
         this.allowJs = config.allowJs;
         this.declaration = config.declaration;
      }

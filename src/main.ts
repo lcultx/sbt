@@ -4,8 +4,8 @@
 import * as program from 'commander';
 import {BuildTools} from './lib/tools/BuildTools';
 import {PublishTools} from './lib/tools/PublishTools';
-import {AstTools} from './lib/tools/AstTools';
-import {NativeBuildTools} from './lib/tools/NativeBuildTools';
+//import {AstTools} from './lib/tools/AstTools';
+import {ComplieToNativeTools} from './lib/tools/ComplieToNativeTools';
 program.version('0.0.1');
 
 program.command('build <module_name>')
@@ -17,12 +17,12 @@ program.command('build <module_name>')
    .action(function (moduleName, options) {
       console.log('build ' + moduleName);
       if (options.nativeMode) {
-         let buildTools = new NativeBuildTools(moduleName);
+         let buildTools = new ComplieToNativeTools(moduleName);
          buildTools.complie();
       } else {
          let buildTools = new BuildTools(moduleName);
          if (moduleName.indexOf('.ts') > -1) {
-            buildTools.complie();
+            buildTools.build();
          } else {
             if (options.quickMode) {
                buildTools.enableQuickMode();
@@ -39,7 +39,7 @@ program.command('build <module_name>')
             if(options.quickMode){
                buildTools.quickComplie();
             }else{
-               buildTools.complie();
+               buildTools.build();
             }
 
          }
@@ -60,14 +60,14 @@ program.command('publish <module_name>')
 
    })
 
-program.command('ast <module_name>')
-   .option("-s, --saveFile")
-   // .option("-p, --property")
-   // .option("-m, --method")
-   .action(function (moduleName, options) {
-      var astTools = new AstTools();
-      astTools.parser(moduleName);
-   })
+// program.command('ast <module_name>')
+//    .option("-s, --saveFile")
+//    // .option("-p, --property")
+//    // .option("-m, --method")
+//    .action(function (moduleName, options) {
+//       var astTools = new AstTools();
+//       astTools.parser(moduleName);
+//    })
 
 program.on('--help', function () {
    console.log('  Examples:');

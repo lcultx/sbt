@@ -3,10 +3,10 @@ import * as path from 'path';
 import * as fs from 'fs';
 import {ts2c} from '../mts/ts2c';
 import {gcc} from '../mts/gcc';
-import {BuildTools} from './BuildTools';
+import {ComplieTools} from './ComplieTools';
 
 
-export class NativeBuildTools extends BuildTools {
+export class ComplieToNativeTools extends ComplieTools {
    public complie() {
       var startBuildTime = new Date().getTime();
       var files = this.getNeedComplieFiles();

@@ -1,4 +1,4 @@
-import {BuildTools} from './BuildTools'
+import {ComplieTools} from './ComplieTools'
 import * as ts from "typescript";
 import * as fs from 'fs';
 import * as path from 'path';
@@ -7,7 +7,7 @@ var UglifyJS = require("uglify-js");
 var lzma = require('lzma');
 //var cc = require('closure-compiler');
 import {addVersionNumberToFiles} from '../utils/version'
-export class PublishTools extends BuildTools {
+export class PublishTools extends ComplieTools {
 
    public prepareComplieOptions() {
       this._tsComplieOptions = {
@@ -79,15 +79,15 @@ export class PublishTools extends BuildTools {
    }
 
    private getConcatedFile() {
-      return path.join('build', this.getModuleName() + '.all.js')
+      return path.join('build', this.getModuleName() + '.tmp.js')
    }
 
    private getFiltedFile() {
-      return path.join('build', this.getModuleName() + '.filted.js')
+      return path.join('build', this.getModuleName() + '.tmp.js')
    }
 
    private getMinifyedFile() {
-      return path.join('build', this.getModuleName() + '.min.js')
+      return path.join('build', this.getModuleName() + '.tmp.js')
    }
 
    private getBinaryedFile() {
