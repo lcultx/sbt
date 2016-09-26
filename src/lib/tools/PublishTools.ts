@@ -26,7 +26,7 @@ export class PublishTools extends ComplieTools {
          outFile: './build/' + this.getModuleName() + '.js',
          jsx: ts.JsxEmit.React
       }
- 
+
    }
 
    public publish() {
@@ -39,12 +39,12 @@ export class PublishTools extends ComplieTools {
       //压缩、混淆js文件 生成[module].all.min.js文件 
       this.minifiy(() => {
          //二进制压缩 
-         this.binaryCompress(() => {
-            //拷贝资源 copy  source target
-            this.copyResource();
-            //添加版本号 
-            this.addVersionNumber();
-         });
+         // this.binaryCompress(() => {
+         //    //拷贝资源 copy  source target
+         //    this.copyResource();
+         //    //添加版本号 
+         //    this.addVersionNumber();
+         // });
       });
 
 
@@ -120,6 +120,9 @@ export class PublishTools extends ComplieTools {
 
    }
 
+   /**
+    *详细设置参考 https://github.com/mishoo/UglifyJS/blob/2bc1d02363db3798d5df41fb5059a19edca9b7eb/bin/uglifyjs
+    */
    private minifiy(cb) {
       var config = this.getPublishConfig();
       var enabled = config.minify === false ? false : true;
@@ -135,7 +138,10 @@ export class PublishTools extends ComplieTools {
                }
             },
             mangle: { toplevel: true },
-            mangleProperties: false
+            mangleProperties: false,
+            output: {
+               ascii_only: true
+            }
          });
          this.writeFile(this.getMinifyedFile(), result.code);
 
@@ -195,14 +201,14 @@ export class PublishTools extends ComplieTools {
       var config = this.getPublishConfig();
       var enabled = config.copyResource === false ? false : true;
       if (enabled && config.copyResourceActions) {
-         if(config.beforeCopyResource instanceof Function){
+         if (config.beforeCopyResource instanceof Function) {
             config.beforeCopyResource();
          }
          for (var i in config.copyResourceActions) {
             var action = config.copyResourceActions[i]
             fsExtra.copySync(action.from, action.to)
          }
-         if(config.afterCompyResource instanceof Function){
+         if (config.afterCompyResource instanceof Function) {
             config.afterCompyResource();
          }
       }
@@ -213,11 +219,11 @@ export class PublishTools extends ComplieTools {
       var config = this.getPublishConfig();
       var enabled = config.addVersionNumber === false ? false : true;
       if (enabled && config.needVersionFiles) {
-         if(config.beforeAddVersionNumber instanceof Function){
+         if (config.beforeAddVersionNumber instanceof Function) {
             config.beforeAddVersionNumber();
          }
          addVersionNumberToFiles(config.needVersionFiles);
-         if(config.afterAddVersionNumber instanceof Function){
+         if (config.afterAddVersionNumber instanceof Function) {
             config.afterAddVersionNumber();
          }
       }
