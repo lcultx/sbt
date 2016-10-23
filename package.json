@@ -24,6 +24,7 @@
     "chokidar": "^1.6.0",
     "commander": "^2.9.0",
     "fs-extra": "^0.30.0",
+    "livereload": "^0.6.0",
     "lzma": "^2.3.2",
     "nedb": "^1.8.0",
     "requirejs": "^2.3.1",

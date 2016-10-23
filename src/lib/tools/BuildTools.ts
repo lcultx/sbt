@@ -9,14 +9,26 @@ var lzma = require('lzma');
 import {addVersionNumberToFiles} from '../utils/version'
 export class BuildTools extends ComplieTools {
 
-
-   public build() {
+   private _watchMode:boolean = false;
+   public enableWatchMode(){
+         this._watchMode = true;
+   }
+   public _build() {
       //编译js文件
       this.complie();
       //拷贝资源 copy  source target
       this.copyResource();
       //添加版本号 
       this.addVersionNumber();
+   }
+
+   public build(){
+         if(this._watchMode){
+               var modulePath = this.getModulePath(this.getModuleName());
+               fs.watch(modulePath,()=>{
+                     this._build()
+               })
+         }
    }
 
    public getBuildConfig() {

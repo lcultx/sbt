@@ -237,6 +237,8 @@ export class ComplieTools extends BaseTools {
       }
    }
 
+   
+
    public complie() {
       console.log(new Date())
       var startBuildTime = new Date().getTime();
@@ -308,6 +310,8 @@ export class ComplieTools extends BaseTools {
    public enableBuildChildMode() {
       this._buildChildMode = true;
    }
+
+
 
    public buildDeps() {
 
