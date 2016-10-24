@@ -37,14 +37,14 @@ export class PublishTools extends ComplieTools {
       //全局剔除 assert debugger log之类
       this.filter();
       //压缩、混淆js文件 生成[module].all.min.js文件 
-      this.minifiy(() => {
+      this.minify(() => {
          //二进制压缩 
-         // this.binaryCompress(() => {
-         //    //拷贝资源 copy  source target
-         //    this.copyResource();
-         //    //添加版本号 
-         //    this.addVersionNumber();
-         // });
+         this.binaryCompress(() => {
+            //拷贝资源 copy  source target
+            this.copyResource();
+            //添加版本号 
+            this.addVersionNumber();
+         });
       });
 
 
@@ -123,12 +123,12 @@ export class PublishTools extends ComplieTools {
    /**
     *详细设置参考 https://github.com/mishoo/UglifyJS/blob/2bc1d02363db3798d5df41fb5059a19edca9b7eb/bin/uglifyjs
     */
-   private minifiy(cb) {
+   private minify(cb) {
       var config = this.getPublishConfig();
       var enabled = config.minify === false ? false : true;
       if (enabled) {
-         if (config.beforeFliter instanceof Function) {
-            config.beforeFliter();
+         if (config.beforeMinify instanceof Function) {
+            config.beforeMinify();
          }
          var result = UglifyJS.minify([this.getFiltedFile()], {
             compress: {
@@ -145,8 +145,8 @@ export class PublishTools extends ComplieTools {
          });
          this.writeFile(this.getMinifyedFile(), result.code);
 
-         if (config.afterFliter instanceof Function) {
-            config.afterFliter();
+         if (config.afterMinify instanceof Function) {
+            config.afterMinify();
          }
          cb();
 
