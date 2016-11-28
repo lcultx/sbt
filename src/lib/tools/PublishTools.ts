@@ -9,25 +9,7 @@ var lzma = require('lzma');
 import {addVersionNumberToFiles} from '../utils/version'
 export class PublishTools extends ComplieTools {
 
-   public prepareComplieOptions() {
-      this._tsComplieOptions = {
-         target: ts.ScriptTarget.ES5,
-         module: ts.ModuleKind.AMD,
-         allowJs: false,
-         noImplicitAny: false,
-         removeComments: true,
-         noLib: false,
-         preserveConstEnums: true,
-         suppressImplicitAnyIndexErrors: true,
-         emitDecoratorMetadata: true,
-         experimentalDecorators: true,
-         sourceMap: false,
-         noImplicitUseStrict: true,
-         outFile: './build/' + this.getModuleName() + '.js',
-         jsx: ts.JsxEmit.React
-      }
 
-   }
 
    public publish() {
       //编译js文件

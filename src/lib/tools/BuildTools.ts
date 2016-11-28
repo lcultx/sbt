@@ -28,6 +28,8 @@ export class BuildTools extends ComplieTools {
                fs.watch(modulePath,()=>{
                      this._build()
                })
+         }else{
+            this._build()
          }
    }
 

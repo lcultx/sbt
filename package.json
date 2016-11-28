@@ -1,6 +1,6 @@
 {
   "name": "sbt-cli",
-  "version": "1.08.9",
+  "version": "1.9.0",
   "description": "super build tools",
   "main": "./build/main.js",
   "scripts": {
