@@ -6,7 +6,7 @@ import {BuildTools} from './lib/tools/BuildTools';
 import {PublishTools} from './lib/tools/PublishTools';
 //import {AstTools} from './lib/tools/AstTools';
 import {ComplieToNativeTools} from './lib/tools/ComplieToNativeTools';
-program.version('1.08.9');
+program.version('1.9.0');
 program.command('build <module_name>')
     .option("-q, --quickMode")
     .option("-f, --forceMode")

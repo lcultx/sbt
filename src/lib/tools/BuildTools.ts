@@ -33,7 +33,7 @@ export class BuildTools extends ComplieTools {
          }
    }
 
-   public getBuildConfig() {
+   public getBuildConfig():any {
       var config = this.getModuleConfig(this.getModuleName());
       return config.build;
    }

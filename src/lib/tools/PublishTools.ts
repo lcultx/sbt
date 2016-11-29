@@ -32,7 +32,7 @@ export class PublishTools extends ComplieTools {
 
    }
 
-   public getPublishConfig() {
+   public getPublishConfig():any {
       var config = this.getModuleConfig(this.getModuleName());
       return config.publish;
    }

@@ -69,7 +69,7 @@ export class ComplieTools extends BaseTools {
    }
 
 
-   public getThisModuleConfig() {
+   public getThisModuleConfig() :any{
       var moduleName = this.getModuleName();
       return this.getModuleConfig(moduleName)
    }
